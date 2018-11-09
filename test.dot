@@ -1,0 +1,8 @@
+digraph test {
+  n1 [id=1 name="foo" type="A"];
+  n2 [id=2 name="bar" type="B"];
+  n3 [id=3 name="baz" type="C"];
+  n1 -> n2;
+  n2 -> n3;
+  n3 -> n1;
+}
