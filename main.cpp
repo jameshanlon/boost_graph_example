@@ -8,6 +8,8 @@
 #include <boost/graph/graphviz.hpp>
 #include <boost/graph/iteration_macros.hpp>
 
+// NOTE: changing this to an enum class breaks the dynamic_property_map.
+
 enum VertexType {
   A, B, C, NONE
 };
@@ -17,6 +19,8 @@ struct VertexProperties {
   int id;
   VertexType type;
   std::string name;
+  bool flag;
+  VertexProperties() : flag(false) {}
 };
 
 using Graph = boost::adjacency_list<boost::vecS,
@@ -50,13 +54,14 @@ int main(int argc, char *argv[]) {
   dp.property("id",   boost::get(&VertexProperties::id,   graph));
   dp.property("type", boost::get(&VertexProperties::type, graph));
   dp.property("name", boost::get(&VertexProperties::name, graph));
+  dp.property("flag", boost::get(&VertexProperties::flag, graph));
   // Read graph from file.
   std::fstream infile("test.dot");
   if (!infile.is_open()) {
     std::cout << "Could not open file";
     return 1;
   }
-  if (!boost::read_graphviz(infile, graph, dp, "name")) {
+  if (!boost::read_graphviz(infile, graph, dp, /*node_id=*/"name")) {
     std::cout << "Could not read file";
     return 1;
   }
@@ -65,6 +70,7 @@ int main(int argc, char *argv[]) {
     std::cout << "VERTEX [id="<<graph[v].id
                       <<" name="<<graph[v].name
                       <<" type="<<boost::lexical_cast<std::string>(graph[v].type)
+                      <<" flag="<<graph[v].flag
                       <<"]\n";
   }
   // Loop over all edges.
@@ -79,7 +85,14 @@ int main(int argc, char *argv[]) {
         vd = boost::vertex(i, graph);
     std::cout << "VERTEX_BY_INDEX " << graph[vd].name << "\n";
   }
+  // Set property.
+  BGL_FORALL_VERTICES(v, graph, Graph) graph[v].flag = true;
+  BGL_FORALL_VERTICES(v, graph, Graph) {
+    std::cout << "VERTEX [id="<<graph[v].id
+                      <<" flag="<<graph[v].flag
+                      <<"]\n";
+  }
   // Write graphviz file.
-  boost::write_graphviz_dp(std::cout, graph, dp, std::string("name"));
+  boost::write_graphviz_dp(std::cout, graph, dp, /*node_id=*/"name");
   return 0;
 }
