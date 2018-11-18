@@ -1,6 +1,6 @@
-# boost::graph example
+# Boost Graph example
 
-Example program showing how to use aspects of boost::graph.
+Example program showing how to use aspects of Boost Graph Library.
 
 To build:
 ```
