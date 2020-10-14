@@ -85,6 +85,10 @@ int main(int argc, char *argv[]) {
         vd = boost::vertex(i, graph);
     std::cout << "VERTEX_BY_INDEX " << graph[vd].name << "\n";
   }
+  // Get vertices using an iterator.
+  for (auto vd : boost::make_iterator_range(boost::vertices(graph))) {
+    std::cout << "VERTEX_BY_IT " << graph[vd].name << "\n";
+  }
   // Set property.
   BGL_FORALL_VERTICES(v, graph, Graph) graph[v].flag = true;
   BGL_FORALL_VERTICES(v, graph, Graph) {
